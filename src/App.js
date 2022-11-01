@@ -12,25 +12,67 @@ function App() {
 
   })
   const handleChange=(e)=>{
-        setInputData({...inputData,[e.target.name]:e.target.value})
-  }
+    setInputData({...inputData,[e.target.name]:e.target.value})
+}
+  const formConfig=[
+    {
+      type:"text",
+      name:"firstName",
+    },
+    {
+      type:"text",
+      name:"lastName",
+    },
+    {
+      type:"email",
+      name:"email",
+    },
+    {
+      type:"phone",
+      name:"phoneNumber",
+    },
+    {
+      type:"password",
+      name:"password"
+    },
+    {
+      type:"url",
+      name:"website"
+    }
+  ]
+     const getFakerData=(formConfig)=>{
+    const  values={};
+    formConfig.forEach(config => {
+         if(config.type==='text'){
+        if(config.name==='firstName')
+        values.firstName=faker.name.firstName();
+        else {
+          values.lastName=faker.name.lastName();
+        }
+      }else if(config.type==='email'){
+            values.email=faker.internet.email();
+      }else if(config.type==='url'){
+        values.website=faker.internet.url();
+      }else if(config.type==='password'){
+         values.password=faker.internet.password();
+      }else if(config.type==='phone'){
+        values.phoneNumber=faker.phone.number('+91-#####-#####');
+      }
+      
+    });
+      return values;
+     }
   const handleAutofill=(e)=>{
     e.preventDefault();
-    const firstName=faker.name.firstName();
-    const lastName=faker.name.lastName();
-    const email=faker.internet.email();
-    const website=faker.internet.url();
-    const password=faker.internet.password();
-    const phoneNumber=faker.phone.number('+91-#####-#####');
-    const rePassword=password;
+    const fakerData=getFakerData(formConfig);
     setInputData({...inputData,
-      firstName:firstName,
-      lastName:lastName,
-      email:email,
-      website:website,
-      password:password,
-      phoneNumber:phoneNumber,
-      rePassword:rePassword
+      firstName:fakerData.firstName,
+      lastName:fakerData.lastName,
+      email:fakerData.email,
+      website:fakerData.website,
+      password:fakerData.password,
+      phoneNumber:fakerData.phoneNumber,
+      rePassword:fakerData.password
     })
   
   }
