@@ -1,92 +1,105 @@
 import { faker } from '@faker-js/faker';
 import { IFormConfig, IFormInput } from './model';
- export const formConfig:{type:string; name:string;}[]=[
+export const formConfig: IFormConfig[] = [
     {
-      type:"text",
-      name:"firstName",
+        type: "name"
     },
     {
-      type:"text",
-      name:"lastName",
+        type: "firstName"
     },
     {
-         type:"number",
-         name:'age',
+        type: "middleName"
     },
     {
-      type:"text",
-      name:"email",
+        type: "lastName"
     },
     {
-      type:"phone",
-      name:"phoneNumber",
-    },
-    {
-      type:"password",
-      name:"password"
-    },
-    {
-      type:"url",
-      name:"website"
-    },{
-        type:"birthdate",
-        name:"birthdate"
-    },
-    { 
-        type:'sex',
-        name:"gender",
-    }
-  ]
-   export const getFakerData=(formConfig:IFormConfig[])=>{
+        type: "age"
 
-    const  values:IFormInput={
+    },
+    {
+        type: "email"
+    },
+    {
+        type: "phone"
+    },
+    {
+        type: "password"
+    },
+    {
+        type: "url"
+
+    }, {
+        type: "birthdate"
+    },
+    {
+        type: 'gender',
+        options: ['male', "female"]
+    },
+    {
+        type: 'checkbox',
+        options: ['study', 'cricket', 'football', "coding"]
+    }
+]
+export const getFakerData = (formConfig: IFormConfig[]) => {
+
+    const values: IFormInput = {
         firstName: '',
         lastName: '',
+        middleName: "",
         email: '',
         phoneNumber: '',
         website: '',
         password: '',
         rePassword: '',
-        name:"",
-        age:0,
+        name: "",
+        age: 0,
+        gender: "",
+        checkbox: "",
     }
-       
-    
-    formConfig.forEach((config:IFormConfig) => {
+
+
+    formConfig.forEach((config: IFormConfig) => {
         switch (config.type) {
-            case "text":
-                switch (config.name){
-                    case 'firstName':
-                        values.firstName=faker.name.firstName();
-                        break;
-                    case 'lastName':
-                        values.lastName=faker.name.lastName();
-                        break;    
-                    case 'email':
-                        values.email=faker.internet.email();
-                        break;
-                    case 'name':
-                        values.name=faker.name.fullName();
-                        break;    
-                    default:
-                        break;
-                }
+            case "firstName":
+                values.firstName = faker.name.firstName();
                 break;
-            case 'number':
-                values.age=faker.datatype.number({min:5, max:100});
-                break;    
+            case 'lastName':
+                values.lastName = faker.name.lastName();
+                break;
+            case 'name':
+                values.name = faker.name.fullName();
+                break;
+            case 'middleName':
+                values.middleName = faker.name.middleName();
+                break;
+            case 'email':
+                values.email = faker.internet.email();
+                break;
+            case 'age':
+                values.age = faker.datatype.number({ min: 5, max: 100 });
+                break;
             case 'url':
-                values.website=faker.internet.url();
+                values.website = faker.internet.url();
                 break;
             case 'password':
-                values.password=faker.internet.password();
+                values.password = faker.internet.password();
                 break;
             case 'phone':
-                values.phoneNumber=faker.phone.number('+91-#####-#####');
-                break;         
+                values.phoneNumber = faker.phone.number('+91-#####-#####');
+                break;
+            case 'gender':
+                    if (config.options !== undefined){
+                    values.gender = config.options[Math.floor(Math.random() * config.options.length)]
+                    }
+                break;
+            case 'checkbox':
+                    if (config.options !== undefined)
+                    values.checkbox = config.options[Math.floor(Math.random() * config.options.length)]
+                break;
             default:
                 break;
         }
     });
-      return values;
-     }
+    return values;
+}
