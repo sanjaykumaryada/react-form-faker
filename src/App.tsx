@@ -11,7 +11,8 @@ function App() {
     website:"",
     password:"",
     rePassword:"",
-
+    name:"",
+     age:0,
   })
   const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
     setInputData({...inputData,[e.target.name]:e.target.value})

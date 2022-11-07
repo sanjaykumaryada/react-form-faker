@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { IFormConfig, IFormInput } from './model';
  export const formConfig:{type:string; name:string;}[]=[
     {
       type:"text",
@@ -36,22 +37,9 @@ import { faker } from '@faker-js/faker';
         name:"gender",
     }
   ]
-   export const getFakerData=(formConfig:{
-    type: string;
-    name: string;
-}[])=>{
+   export const getFakerData=(formConfig:IFormConfig[])=>{
 
-    const  values:{
-        firstName:string,
-    lastName:string,
-    email:string,
-    phoneNumber:string,
-    website:string,
-    password:string,
-    rePassword:string,
-    name:string,
-    age:number,
-    }={
+    const  values:IFormInput={
         firstName: '',
         lastName: '',
         email: '',
@@ -64,7 +52,7 @@ import { faker } from '@faker-js/faker';
     }
        
     
-    formConfig.forEach((config:{type:string;name:string;}) => {
+    formConfig.forEach((config:IFormConfig) => {
         switch (config.type) {
             case "text":
                 switch (config.name){

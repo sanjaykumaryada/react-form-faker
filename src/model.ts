@@ -6,4 +6,10 @@ export interface IFormInput{
     website:string,
     password:string,
     rePassword:string,
+    name:string,
+    age:number,
+}
+export interface IFormConfig{
+    type: string;
+    name: string;
 }
