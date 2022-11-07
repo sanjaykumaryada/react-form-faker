@@ -1,7 +1,9 @@
- import React,{useState} from "react";
+import React,{useState} from "react";
 import {formConfig, getFakerData} from "./fakerData";
+import { IFormInput } from "./model";
+
 function App() {
-  const [inputData, setInputData]=useState({
+  const [inputData, setInputData]=useState<IFormInput>({
     firstName:"",
     lastName:"",
     email:"",
@@ -11,10 +13,10 @@ function App() {
     rePassword:"",
 
   })
-  const handleChange=(e)=>{
+  const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
     setInputData({...inputData,[e.target.name]:e.target.value})
 }
-  const handleAutofill=(e)=>{
+  const handleAutofill=(e:React.FormEvent)=>{
     e.preventDefault();
     const fakerData=getFakerData(formConfig);
     console.log(fakerData);
@@ -29,7 +31,7 @@ function App() {
     })
   
   }
- const handleRegister=(e)=>{
+ const handleRegister=(e:React.FormEvent)=>{
   e.preventDefault();
  }
   return (

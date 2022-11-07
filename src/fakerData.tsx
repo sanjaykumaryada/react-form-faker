@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
- export const formConfig=[
+ export const formConfig:{type:string; name:string;}[]=[
     {
       type:"text",
       name:"firstName",
@@ -36,9 +36,35 @@ import { faker } from '@faker-js/faker';
         name:"gender",
     }
   ]
-   export const getFakerData=(formConfig)=>{
-    const  values={};
-    formConfig.forEach(config => {
+   export const getFakerData=(formConfig:{
+    type: string;
+    name: string;
+}[])=>{
+
+    const  values:{
+        firstName:string,
+    lastName:string,
+    email:string,
+    phoneNumber:string,
+    website:string,
+    password:string,
+    rePassword:string,
+    name:string,
+    age:number,
+    }={
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        website: '',
+        password: '',
+        rePassword: '',
+        name:"",
+        age:0,
+    }
+       
+    
+    formConfig.forEach((config:{type:string;name:string;}) => {
         switch (config.type) {
             case "text":
                 switch (config.name){
@@ -69,13 +95,7 @@ import { faker } from '@faker-js/faker';
                 break;
             case 'phone':
                 values.phoneNumber=faker.phone.number('+91-#####-#####');
-                break;  
-            case 'birthdate':
-                values.birthdate=faker.date.birthdate(); 
-                break;  
-            case 'sex':
-                values.gender=faker.name.sex();
-                break;      
+                break;         
             default:
                 break;
         }
