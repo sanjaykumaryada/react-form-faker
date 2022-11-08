@@ -14,5 +14,6 @@ export interface IFormInput{
 }
 export interface IFormConfig{
     type: string;
+    valueKey:string;
     options?:string[];
 }
