@@ -10,10 +10,22 @@ export interface IFormInput{
     name?:string,
     age?:number,
     gender?:string,
-    checkbox?:string,
+    checkbox?:string[],
 }
 export interface IFormConfig{
     type: string;
     valueKey:string;
-    options?:string[];
+    fieldProps?:any;
+}
+export interface IFakeValues{
+    myFirstName:string;
+    myLastName: string;
+    myEmail: string;
+    myGender:string;
+    myCheckbox:Array<string>;
+    myAge:string;
+    myPassword:string;
+    myWebsite:string;
+    myFile:any;
+   
 }

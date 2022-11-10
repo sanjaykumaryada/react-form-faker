@@ -1,108 +1,131 @@
 import { faker } from '@faker-js/faker';
 import { IFormConfig } from './model';
-export const formConfig: IFormConfig[] = [
+export const myConfig: IFormConfig[] = [
     {
-        type: "name",
-        valueKey: "name",
+        type: 'file',
+        valueKey: 'myFile',
     },
     {
-        type: "firstName",
-        valueKey: 'firstName'
+        type: 'text',
+        valueKey: 'myFirstName',
+        fieldProps: { label: 'Enter your firstName', fullWidth: true },
     },
     {
-        type: "middleName",
-        valueKey: "middleName",
+        type: 'text',
+        valueKey: 'myAge',
+        fieldProps: { label: 'Enter your Age', fullWidth: true },
     },
     {
-        type: "lastName",
-        valueKey: 'lastName'
+        type : 'password' ,
+        valueKey : 'myPassword',	  
+        fieldProps :{
+            label : 'Enter password',
+    
+        }
     },
     {
-        type: "age",
-        valueKey: "age"
+        type: "text",
+        valueKey: 'myLastName',
+        fieldProps: { label: 'Enter your lastName', fullWidth: true }
+    },
+    {
+        type: "text",
+        valueKey: 'myEmail',
+        fieldProps: { label: 'Enter your email', fullWidth: true }
+    },
+    {
+        type: "text",
+        valueKey: 'myWebsite',
+        fieldProps: { label: 'Enter your url', fullWidth: true }
+    },
+    {
+        type: 'mui-plain-text',
+        valueKey: 'genderLabel',
+        fieldProps: {
+            isTextHtmlString: false,
+            text: "Choose your gender"
+
+        }
+    },
+    {
+        type: "radio",
+        valueKey: "myGender",
+        fieldProps: {
+            options: [
+                { name: 'male', value: 'male' },
+                { name: 'female', value: 'female' }
+            ],
+        }
 
     },
     {
-        type: "email",
-        valueKey: "email",
-    },
-    {
-        type: "phoneNumber",
-        valueKey: 'phoneNumber',
-    },
-    {
-        type: "password",
-        valueKey: "password",
-    },
-    {
-        type: "website",
-        valueKey: "website",
+        type: "checkbox",
+        valueKey: "myCheckbox",
+        fieldProps: {
+            options: [
+                { name: 'cricket', value: 'cricket' },
+                { name: 'football', value: 'football' },
+                { name: "Table Tennis", value: "Table Tennis" }
+            ],
+            header: 'Tell Us About Your Interests',
+        }
 
-    }, {
-        type: "birthdate",
-        valueKey: "birthdate",
     },
-    {
-        type: 'gender',
-        valueKey: "gender",
-        options: ["male", "female"]
-    },
-    {
-        type: 'checkbox',
-        valueKey: "checkbox",
-        options: ['study', 'cricket', 'football', "coding"]
-    }
+
+
 ]
-export const getFakerData = (formConfig: IFormConfig[]) => {
+export const getFakerData = (myConfig: IFormConfig[]) => {
 
     const values: { [key: string]: string } = {}
 
 
-    formConfig.forEach((config: IFormConfig) => {
+    myConfig.forEach((config: IFormConfig) => {
         switch (config.type) {
-            case "firstName":
-                values[config.valueKey] = faker.name.firstName();
+            case 'text':
+                switch (config.valueKey) {
+                    case 'myName':
+                        values[config.valueKey] = faker.name.fullName();
+                        break;
+                    case 'myFirstName':
+                        values[config.valueKey] = faker.name.firstName();
+                        break;
+                    case 'myLastName':
+                        values[config.valueKey] = faker.name.lastName();
+                        break;
+                    case 'myMiddleName':
+                        values[config.valueKey] = faker.name.middleName();
+                        break;
+                    case 'myEmail':
+                        values[config.valueKey] = faker.internet.email();
+                        break;
+                    case "myAge":
+                        values[config.valueKey] = (Math.floor(Math.random() * 100) + 10).toString();
+                        break; 
+                    case "myWebsite":
+                        values[config.valueKey] = faker.internet.url();
+                        break;       
+                    default:
+                        break;
+                }
                 break;
-            case 'lastName':
-                values[config.valueKey] = faker.name.lastName();
-                break;
-            case 'name':
-                values[config.valueKey] = faker.name.fullName();
-                break;
-            case 'middleName':
-                values[config.valueKey] = faker.name.middleName();
-                break;
-            case 'email':
-                values[config.valueKey] = faker.internet.email();
-                break;
-            case 'age':
-                values[config.valueKey] = (Math.floor(Math.random() * 100) + 10).toString();
-                break;
-            case 'website':
-                values[config.valueKey] = faker.internet.url();
-                break;
-            case 'password':
-                values[config.valueKey] = faker.internet.password();
-                break;
-            case 'phoneNumber':
-                values[config.valueKey] = faker.phone.number('+91-#####-#####');
-                break;
-            case 'gender':
-                if (config.options !== undefined && config.options.length !== 0){
-                    values[config.valueKey] = config.options[Math.floor(Math.random() * config.options.length)]
-                }else{
-                    throw new Error("Please fill atleast one option");
-                    
+            case 'radio':
+                if (config.fieldProps !== undefined && config.fieldProps.options.length > 0) {
+                    values[config.valueKey] = config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value;
                 }
                 break;
             case 'checkbox':
-                if (config.options !== undefined && config.options.length !== 0){
-                    values[config.valueKey] = config.options[Math.floor(Math.random() * config.options.length)];
-                }else{
-                        throw new Error("Please fill atleast one option");
-                        
+                if (config.fieldProps !== undefined && config.fieldProps.options.length > 0) {
+                    values[config.valueKey] = config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value;
                 }
-                
+                break;
+            case 'password':
+                values[config.valueKey] = faker.internet.password();
+                  break;
+            case 'phoneNumber':
+                values[config.valueKey] = faker.phone.number('+91-#####-#####');
+                break;
+            case 'file':
+                values[config.valueKey]=faker.image.abstract();
                 break;
             default:
                 break;
