@@ -1,31 +1,49 @@
 import { faker } from '@faker-js/faker';
-import { IFormConfig } from './model';
+import { IFakeValues, IFormConfig } from './model';
+
+export const fakerMap = {
+    myFirstName: faker.name.firstName,
+    myLastName: faker.name.lastName,
+    myName: faker.name.fullName,
+    myPassword: faker.internet.password,
+    myEmail: faker.internet.email,
+    website: faker.internet.url,
+    phoneNumber:faker.phone.number,
+    myWebsite:faker.internet.url,
+    myAge:faker.datatype.number,
+    myJobTitle:faker.name.jobTitle,
+}
 export const myConfig: IFormConfig[] = [
     {
-        type: 'file',
-        valueKey: 'myFile',
+        type: "phone",
+        valueKey: "phoneNumber",
+    
     },
     {
         type: 'text',
         valueKey: 'myFirstName',
+       
         fieldProps: { label: 'Enter your firstName', fullWidth: true },
     },
     {
         type: 'text',
         valueKey: 'myAge',
+        
         fieldProps: { label: 'Enter your Age', fullWidth: true },
     },
     {
-        type : 'password' ,
-        valueKey : 'myPassword',	  
-        fieldProps :{
-            label : 'Enter password',
-    
+        type: 'password',
+        valueKey: 'myPassword',
+        
+        fieldProps: {
+            label: 'Enter password',
+
         }
     },
     {
         type: "text",
         valueKey: 'myLastName',
+       
         fieldProps: { label: 'Enter your lastName', fullWidth: true }
     },
     {
@@ -36,6 +54,7 @@ export const myConfig: IFormConfig[] = [
     {
         type: "text",
         valueKey: 'myWebsite',
+       
         fieldProps: { label: 'Enter your url', fullWidth: true }
     },
     {
@@ -68,68 +87,50 @@ export const myConfig: IFormConfig[] = [
                 { name: "Table Tennis", value: "Table Tennis" }
             ],
             header: 'Tell Us About Your Interests',
-        }
+        },
+        multiple: true,
 
     },
+    {
+        type: 'select',
+        valueKey: 'mySelect',
+       
+        fieldProps: {
+            options: [
+                { name: 'Abc', value: 'abc' },
+                { name: 'XYZ', value: 'xyz' },
+            ]
+        },
+    }
 
 
 ]
-export const getFakerData = (myConfig: IFormConfig[]) => {
-
-    const values: { [key: string]: string } = {}
-
-
-    myConfig.forEach((config: IFormConfig) => {
+export const getFakerData = (myConfig: IFormConfig[], fakerMap: any, values: IFakeValues) => {
+myConfig.forEach((config: IFormConfig) => {
         switch (config.type) {
             case 'text':
-                switch (config.valueKey) {
-                    case 'myName':
-                        values[config.valueKey] = faker.name.fullName();
-                        break;
-                    case 'myFirstName':
-                        values[config.valueKey] = faker.name.firstName();
-                        break;
-                    case 'myLastName':
-                        values[config.valueKey] = faker.name.lastName();
-                        break;
-                    case 'myMiddleName':
-                        values[config.valueKey] = faker.name.middleName();
-                        break;
-                    case 'myEmail':
-                        values[config.valueKey] = faker.internet.email();
-                        break;
-                    case "myAge":
-                        values[config.valueKey] = (Math.floor(Math.random() * 100) + 10).toString();
-                        break; 
-                    case "myWebsite":
-                        values[config.valueKey] = faker.internet.url();
-                        break;       
-                    default:
-                        break;
-                }
-                break;
-            case 'radio':
-                if (config.fieldProps !== undefined && config.fieldProps.options.length > 0) {
-                    values[config.valueKey] = config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value;
-                }
-                break;
-            case 'checkbox':
-                if (config.fieldProps !== undefined && config.fieldProps.options.length > 0) {
-                    values[config.valueKey] = config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value;
-                }
+             if ( fakerMap.hasOwnProperty(config.valueKey)) {
+                values[config.valueKey]=fakerMap[config.valueKey]();
+                } 
                 break;
             case 'password':
-                values[config.valueKey] = faker.internet.password();
-                  break;
-            case 'phoneNumber':
-                values[config.valueKey] = faker.phone.number('+91-#####-#####');
+                values.myPassword= fakerMap.myPassword();
                 break;
-            case 'file':
-                values[config.valueKey]=faker.image.abstract();
+            case 'phone':
+                values.phoneNumber= fakerMap.phoneNumber('+91-###########');
+                break;
+            case "checkbox":
+            case "radio":
+            case "select":
+                if (config.fieldProps !== undefined && config.fieldProps.options.length > 0) {
+                    if(config.multiple){
+                        values[config.valueKey].push(config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value);
+                    }else
+                    values[config.valueKey] = config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value;
+                }
                 break;
             default:
                 break;
         }
     });
-    return values;
 }

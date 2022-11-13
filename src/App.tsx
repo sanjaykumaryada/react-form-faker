@@ -1,50 +1,57 @@
-import React, { useState } from "react";
-import { getFakerData, myConfig } from "./fakerData";
-import { IFakeValues } from "./model";
-import { ReactForm } from "react-forms";
+import React from "react";
+import { getFakerData, myConfig, fakerMap } from "./fakerData";
+import {MLFormBuilder } from "react-forms";
+import { Formik} from 'formik';
+import { IFormikProps } from "./model";
 function App() {
-	const myInitialValues = {
+ 	const myInitialValues = {
 		myFirstName: "",
 		myLastName: "",
 		myEmail: "",
+		myName:"",
 		myGender: "",
 		myCheckbox: [],
 		myAge: "",
 		myPassword: "",
-		myWebsite:"",
-		myFile:"",
+		myWebsite: "",
+		phoneNumber: "",
+		mySelect: "",
 	}
-	const [formFakeValues, setFormFakeValues] = useState<IFakeValues>(myInitialValues);
 
-	const fakeValues: IFakeValues = myInitialValues;
-	const handleAutofill = async (e: React.FormEvent) => {
+	const handleAutofill = async (e: React.FormEvent, formikProps: IFormikProps) => {
 		e.preventDefault();
-		const fakerData = await getFakerData(myConfig);
-		console.log(fakerData);
-		fakeValues.myFirstName = fakerData.myFirstName;
-		fakeValues.myLastName = fakerData.myLastName;
-		fakeValues.myEmail = fakerData.myEmail;
-		fakeValues.myGender = fakerData.myGender;
-		fakeValues.myCheckbox.push(fakerData.myCheckbox);
-		fakeValues.myAge = fakerData.myAge;
-		fakeValues.myPassword = fakerData.myPassword;
-		fakeValues.myWebsite=fakerData.myWebsite;
-		fakeValues.myFile=fakerData.myFile;
-		setFormFakeValues(fakeValues);
+		console.log(formikProps.values,"yes");
+	    getFakerData(myConfig, fakerMap,formikProps.values);
 	}
-	const handleSubmit = (values: object, submitProps: any) => {
-		const { setSubmitting } = submitProps;
-		setSubmitting(false);
+	const handleSubmit = (values: object, formikProps: any) => {
+		 console.log(values);
+		formikProps.setSubmitting(false);
 	}
 
 	return (
 		<div className="bg-blue-50 pl-60 mt-12">
-			<ReactForm
-				config={myConfig}
-				initialValues={formFakeValues || myInitialValues}
-				enableReinitialize
-				onSubmit={handleSubmit} actionConfig={{ submitButtonText: "Register" }} formId={'inputForm'} />
-			<button className="bg-orange-500 rounded-md mb-4 h-11 p-3 text-white absolute right-0 top-0" onClick={handleAutofill} >Autofill</button>
+
+			 <Formik
+            initialValues={myInitialValues}
+            onSubmit={handleSubmit}
+			enableReinitialize
+        >
+            {
+                (formProps) =>{ 
+					return (
+					<>
+					<MLFormBuilder
+                    schema={myConfig}
+                    formId={"inputForm"}
+                    actionConfig={{ submitButtonText: "Register" }}
+                    formikProps={formProps}
+                />
+				<button className="bg-orange-500 rounded-md mb-4 h-11 p-3 text-white absolute right-0 top-0" onClick={(e)=>handleAutofill(e,formProps)} >Autofill</button>
+				</>
+				)
+            }}
+
+        </Formik>
 		</div>
 
 	);
