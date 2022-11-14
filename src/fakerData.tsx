@@ -1,6 +1,19 @@
 import { faker } from '@faker-js/faker';
-import { IFakeValues, IFormConfig } from './model';
-
+import { IFormConfig } from './model';
+/**
+ * {
+ *    "key": Fakerfn,
+ *    "key": {
+ *         "value" : FakerFn,
+ *          "args" : [""],
+ *           "options": [],
+ *           "isMultiple": boolean
+ *      }
+ * }
+ * @param myConfig 
+ * @param fakerMap 
+ * @param values 
+ */
 export const fakerMap = {
     myFirstName: faker.name.firstName,
     myLastName: faker.name.lastName,
@@ -8,33 +21,51 @@ export const fakerMap = {
     myPassword: faker.internet.password,
     myEmail: faker.internet.email,
     website: faker.internet.url,
-    phoneNumber:faker.phone.number,
-    myWebsite:faker.internet.url,
-    myAge:faker.datatype.number,
-    myJobTitle:faker.name.jobTitle,
+    myWebsite: faker.internet.url,
+    myAge: {
+        "args": { min: 10, max: 100 },
+        "myAge": faker.datatype.number,
+    },
+    phoneNumber: {
+        "phoneNumber": faker.phone.number,
+        "args": '+91-##########'
+    },
+    myRadio: {
+        "myRadio": faker.helpers.arrayElement,
+        "args": ['male', "female"]
+    },
+    myCheckbox: {
+        "myCheckbox": faker.helpers.arrayElements,
+        "args": ["cricket", "football", "Tabble Tennis"],
+    },
+    mySelect: {
+        "mySelect": faker.helpers.arrayElement,
+        "args": ["abc", "xyz"],
+    }
+
 }
 export const myConfig: IFormConfig[] = [
     {
         type: "phone",
         valueKey: "phoneNumber",
-    
+
     },
     {
         type: 'text',
         valueKey: 'myFirstName',
-       
+
         fieldProps: { label: 'Enter your firstName', fullWidth: true },
     },
     {
         type: 'text',
         valueKey: 'myAge',
-        
+
         fieldProps: { label: 'Enter your Age', fullWidth: true },
     },
     {
         type: 'password',
         valueKey: 'myPassword',
-        
+
         fieldProps: {
             label: 'Enter password',
 
@@ -43,7 +74,7 @@ export const myConfig: IFormConfig[] = [
     {
         type: "text",
         valueKey: 'myLastName',
-       
+
         fieldProps: { label: 'Enter your lastName', fullWidth: true }
     },
     {
@@ -54,7 +85,7 @@ export const myConfig: IFormConfig[] = [
     {
         type: "text",
         valueKey: 'myWebsite',
-       
+
         fieldProps: { label: 'Enter your url', fullWidth: true }
     },
     {
@@ -68,7 +99,7 @@ export const myConfig: IFormConfig[] = [
     },
     {
         type: "radio",
-        valueKey: "myGender",
+        valueKey: "myRadio",
         fieldProps: {
             options: [
                 { name: 'male', value: 'male' },
@@ -94,7 +125,6 @@ export const myConfig: IFormConfig[] = [
     {
         type: 'select',
         valueKey: 'mySelect',
-       
         fieldProps: {
             options: [
                 { name: 'Abc', value: 'abc' },
@@ -105,32 +135,18 @@ export const myConfig: IFormConfig[] = [
 
 
 ]
-export const getFakerData = (myConfig: IFormConfig[], fakerMap: any, values: IFakeValues) => {
-myConfig.forEach((config: IFormConfig) => {
-        switch (config.type) {
-            case 'text':
-             if ( fakerMap.hasOwnProperty(config.valueKey)) {
-                values[config.valueKey]=fakerMap[config.valueKey]();
-                } 
-                break;
-            case 'password':
-                values.myPassword= fakerMap.myPassword();
-                break;
-            case 'phone':
-                values.phoneNumber= fakerMap.phoneNumber('+91-###########');
-                break;
-            case "checkbox":
-            case "radio":
-            case "select":
-                if (config.fieldProps !== undefined && config.fieldProps.options.length > 0) {
-                    if(config.multiple){
-                        values[config.valueKey].push(config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value);
-                    }else
-                    values[config.valueKey] = config.fieldProps.options[Math.floor(Math.random() * config.fieldProps.options.length)].value;
-                }
-                break;
-            default:
-                break;
+export const getFakerData = (myConfig: IFormConfig[], fakerMap: any,) => {
+
+    const values: { [key: string]: string } = {}
+    
+    myConfig.forEach((config: IFormConfig) => {
+        if (fakerMap.hasOwnProperty(config.valueKey)) {
+            if (typeof fakerMap[config.valueKey] === 'function') {
+                values[config.valueKey] = fakerMap[config.valueKey]();
+            } else {
+                values[config.valueKey] = fakerMap[config.valueKey][config.valueKey](fakerMap[config.valueKey].args)
+            }
         }
     });
+    return values;
 }

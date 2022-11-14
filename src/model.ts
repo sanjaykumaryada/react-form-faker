@@ -17,6 +17,4 @@ export interface IFakeValues{
     phoneNumber:string;
    mySelect:string;
 }
-export interface IFormikProps{
-    values:IFakeValues
-}
+

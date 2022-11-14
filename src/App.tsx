@@ -2,7 +2,6 @@ import React from "react";
 import { getFakerData, myConfig, fakerMap } from "./fakerData";
 import {MLFormBuilder } from "react-forms";
 import { Formik} from 'formik';
-import { IFormikProps } from "./model";
 function App() {
  	const myInitialValues = {
 		myFirstName: "",
@@ -18,13 +17,12 @@ function App() {
 		mySelect: "",
 	}
 
-	const handleAutofill = async (e: React.FormEvent, formikProps: IFormikProps) => {
+	const handleAutofill =async (e:React.FormEvent, formikProps:any) => {
 		e.preventDefault();
-		console.log(formikProps.values,"yes");
-	    getFakerData(myConfig, fakerMap,formikProps.values);
+	const fakeValues =  getFakerData(myConfig, fakerMap);
+	 formikProps.setValues(fakeValues);
 	}
 	const handleSubmit = (values: object, formikProps: any) => {
-		 console.log(values);
 		formikProps.setSubmitting(false);
 	}
 
@@ -46,7 +44,7 @@ function App() {
                     actionConfig={{ submitButtonText: "Register" }}
                     formikProps={formProps}
                 />
-				<button className="bg-orange-500 rounded-md mb-4 h-11 p-3 text-white absolute right-0 top-0" onClick={(e)=>handleAutofill(e,formProps)} >Autofill</button>
+				<button className="bg-orange-500 rounded-md mb-4 h-11 p-3 text-white absolute right-0 top-0" onClick={(e)=>handleAutofill(e, formProps)} >Autofill</button>
 				</>
 				)
             }}
