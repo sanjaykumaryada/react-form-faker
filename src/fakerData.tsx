@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { IFormConfig } from './model';
-import {handleOptionsValues, isFunctionOrObject} from "./fakerUtility";
+import { IFakerMap, IFormConfig } from './model';
+import { handleOptionsValues, isFunctionOrObject } from "./fakerUtility";
 
 
-export const fakerMap = {
+export const fakerMap:IFakerMap = {
     myFirstName: faker.name.firstName,
     myLastName: faker.name.lastName,
     myName: faker.name.fullName,
@@ -13,7 +13,6 @@ export const fakerMap = {
     myAge: {
         value: faker.datatype.number,
         args: { min: 10, max: 100 },
-        
     },
     phoneNumber: {
         value: faker.phone.number,
@@ -28,7 +27,6 @@ export const fakerMap = {
     mySelect: {
         value: faker.helpers.arrayElement,
     },
-
 }
 
 
@@ -123,22 +121,27 @@ export const myConfig: IFormConfig[] = [
 
 
 ]
-export const getFakerData = (myConfig: IFormConfig[], fakerMap: any,) => {
+export const getFakerData = (myConfig: IFormConfig[], fakerMap:any) => {
 
     const values: { [key: string]: string } = {};
 
     myConfig.forEach((config: IFormConfig) => {
         if (fakerMap.hasOwnProperty(config.valueKey)) {
-            if (isFunctionOrObject(fakerMap[config.valueKey]) === 'function') {
-                values[config.valueKey] = fakerMap[config.valueKey]();
-            } else if(isFunctionOrObject(fakerMap[config.valueKey]) === 'object') {
-                if (config.fieldProps && config.fieldProps.options) {
-                 const optionsArray=  handleOptionsValues(config.fieldProps.options);
-                    values[config.valueKey] = fakerMap[config.valueKey].value(optionsArray);
-
-                } else {
-                    values[config.valueKey] = fakerMap[config.valueKey].value(fakerMap[config.valueKey].args)
-                }
+            switch (isFunctionOrObject(fakerMap[config.valueKey])) {
+                case "function":
+                    values[config.valueKey] = fakerMap[config.valueKey]();
+                    break;
+                case "object":
+                    if (config.fieldProps && config.fieldProps.options) {
+                        const optionsArray = handleOptionsValues(config.fieldProps.options);
+                        values[config.valueKey] = fakerMap[config.valueKey].value(optionsArray);
+    
+                    } else {
+                        values[config.valueKey] = fakerMap[config.valueKey].value(fakerMap[config.valueKey].args)
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     });
