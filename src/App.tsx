@@ -2,6 +2,8 @@ import React from "react";
 import { getFakerData, myConfig, fakerMap } from "./fakerData";
 import {MLFormBuilder } from "react-forms";
 import { Formik} from 'formik';
+
+
 function App() {
  	const myInitialValues = {
 		myFirstName: "",
@@ -22,6 +24,7 @@ function App() {
 	const fakeValues =  getFakerData(myConfig, fakerMap);
 	 formikProps.setValues(fakeValues);
 	}
+	
 	const handleSubmit = (values: object, formikProps: any) => {
 		formikProps.setSubmitting(false);
 	}

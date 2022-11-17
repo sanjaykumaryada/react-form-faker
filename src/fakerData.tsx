@@ -1,54 +1,42 @@
 import { faker } from '@faker-js/faker';
 import { IFormConfig } from './model';
-/**
- * {
- *    "key": Fakerfn,
- *    "key": {
- *         "value" : FakerFn,
- *          "args" : [""],
- *           "options": [],
- *           "isMultiple": boolean
- *      }
- * }
- * @param myConfig 
- * @param fakerMap 
- * @param values 
- */
+import {handleOptionsValues, isFunctionOrObject} from "./fakerUtility";
+
+
 export const fakerMap = {
     myFirstName: faker.name.firstName,
     myLastName: faker.name.lastName,
     myName: faker.name.fullName,
     myPassword: faker.internet.password,
     myEmail: faker.internet.email,
-    website: faker.internet.url,
     myWebsite: faker.internet.url,
     myAge: {
-        "args": { min: 10, max: 100 },
-        "myAge": faker.datatype.number,
+        value: faker.datatype.number,
+        args: { min: 10, max: 100 },
+        
     },
     phoneNumber: {
-        "phoneNumber": faker.phone.number,
-        "args": '+91-##########'
+        value: faker.phone.number,
+        args: '+91-99########'
     },
     myRadio: {
-        "myRadio": faker.helpers.arrayElement,
-        "args": ['male', "female"]
+        value: faker.helpers.arrayElement,
     },
     myCheckbox: {
-        "myCheckbox": faker.helpers.arrayElements,
-        "args": ["cricket", "football", "Tabble Tennis"],
+        value: faker.helpers.arrayElements,
     },
     mySelect: {
-        "mySelect": faker.helpers.arrayElement,
-        "args": ["abc", "xyz"],
-    }
+        value: faker.helpers.arrayElement,
+    },
 
 }
+
+
 export const myConfig: IFormConfig[] = [
     {
         type: "phone",
         valueKey: "phoneNumber",
-
+        fieldProps: { label: 'Enter your phoneNumber', fullWidth: true },
     },
     {
         type: 'text',
@@ -137,14 +125,20 @@ export const myConfig: IFormConfig[] = [
 ]
 export const getFakerData = (myConfig: IFormConfig[], fakerMap: any,) => {
 
-    const values: { [key: string]: string } = {}
-    
+    const values: { [key: string]: string } = {};
+
     myConfig.forEach((config: IFormConfig) => {
         if (fakerMap.hasOwnProperty(config.valueKey)) {
-            if (typeof fakerMap[config.valueKey] === 'function') {
+            if (isFunctionOrObject(fakerMap[config.valueKey]) === 'function') {
                 values[config.valueKey] = fakerMap[config.valueKey]();
-            } else {
-                values[config.valueKey] = fakerMap[config.valueKey][config.valueKey](fakerMap[config.valueKey].args)
+            } else if(isFunctionOrObject(fakerMap[config.valueKey]) === 'object') {
+                if (config.fieldProps && config.fieldProps.options) {
+                 const optionsArray=  handleOptionsValues(config.fieldProps.options);
+                    values[config.valueKey] = fakerMap[config.valueKey].value(optionsArray);
+
+                } else {
+                    values[config.valueKey] = fakerMap[config.valueKey].value(fakerMap[config.valueKey].args)
+                }
             }
         }
     });
