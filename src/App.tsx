@@ -31,8 +31,7 @@ function App() {
 
 	return (
 		<div className="bg-blue-50 pl-60 mt-12">
-
-			 <Formik
+        <Formik
             initialValues={myInitialValues}
             onSubmit={handleSubmit}
 			enableReinitialize
